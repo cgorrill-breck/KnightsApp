@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SquareModel" load_steps=2 format=3 uid="uid://c2iedl0bo1g1l"]
+
+[ext_resource type="Script" path="res://SquareModel.gd" id="1_coq26"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_coq26")
+move_number = 0
+access_value = 0
+visited = false

@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://jf14qovvibs2"]
+
+[ext_resource type="Script" path="res://square.gd" id="1_scs8v"]
+[ext_resource type="Resource" uid="uid://c2iedl0bo1g1l" path="res://square_model.tres" id="2_crwrs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0mqj6"]
+size = Vector2(60, 60)
+
+[node name="Square" type="ColorRect"]
+offset_right = 64.0
+offset_bottom = 64.0
+script = ExtResource("1_scs8v")
+model_resource = ExtResource("2_crwrs")
+
+[node name="labelHolder" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+
+[node name="MoveNumberLabel" type="Label" parent="labelHolder"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 8
+text = "0"
+horizontal_alignment = 1
+
+[node name="AccessValueLabel" type="Label" parent="labelHolder"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 8
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(32, 32)
+shape = SubResource("RectangleShape2D_0mqj6")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://kyawuc8xcho5"]
+
+[ext_resource type="Script" path="res://board.gd" id="1_5gwbg"]
+[ext_resource type="PackedScene" uid="uid://jf14qovvibs2" path="res://square.tscn" id="2_atqy0"]
+[ext_resource type="Resource" uid="uid://dbij8haqrq5n8" path="res://board_model_resource.tres" id="3_pk8ca"]
+
+[node name="Board" type="Node2D"]
+script = ExtResource("1_5gwbg")
+square = ExtResource("2_atqy0")
+board_model_resource = ExtResource("3_pk8ca")

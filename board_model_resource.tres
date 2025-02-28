@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="BoardModel" load_steps=3 format=3 uid="uid://dbij8haqrq5n8"]
+
+[ext_resource type="Script" path="res://BoardModel.gd" id="1_u8u0o"]
+[ext_resource type="Resource" uid="uid://c2iedl0bo1g1l" path="res://square_model.tres" id="2_ntase"]
+
+[resource]
+script = ExtResource("1_u8u0o")
+square_model_resource = ExtResource("2_ntase")
