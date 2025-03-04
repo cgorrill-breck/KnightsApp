@@ -1,7 +1,8 @@
 extends Node2D
-
+const TILE_SIZE:= 64
 ## Properties
 var square_grid: Array = []  # 2D array for grid
+var previous_squares: Array = []
 @export var square: PackedScene  # Assigned in the inspector
 @export var board_model_resource : BoardModel
 var active_square: Square
@@ -14,13 +15,24 @@ func _ready() -> void:
 
 ## Handle user input
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("left_mouse_button") and active_square:
+	if not Input.is_action_just_pressed("left_mouse_button"):
+		return
+	if not active_square:
+		return
+	if board_model_resource.get_move_counter() > 1:
+		if square_in_previous(active_square):
+			handle_square_click()
+	else:
 		handle_square_click()
-		var mouse_pos = get_global_mouse_position()
-		var moves : Array = board_model_resource.get_available_moves(int(mouse_pos.y / 64), int(mouse_pos.x / 64))
-		for move in moves:
-			print(str(move[0])+", "+str(move[1]))
-
+	
+			
+func square_in_previous(square: Square):
+	var pos = [0,0]
+	pos[1] = square.get_square_model().get_grid_position().y
+	pos[0] = square.get_square_model().get_grid_position().x
+	print("in previous: " + str(pos in previous_squares))
+	return pos in previous_squares;
+	
 ## ======= Grid Setup =======
 func fill_grid(rows: int, cols: int) -> void:
 	square_grid.clear()
@@ -30,9 +42,9 @@ func fill_grid(rows: int, cols: int) -> void:
 		var row: Array = []
 		for j in range(cols):
 			var new_square: Square = square.instantiate()
-			
+			new_square.set_grid_position(Vector2i(i,j))
 			add_child(new_square)  # Must be added before modifying position
-			new_square.position = Vector2(j * 64, i * 64)  # Set position
+			new_square.position = Vector2(j * TILE_SIZE, i * TILE_SIZE)  # Set position
 
 			new_square.set_dark(dark)  # Set color theme
 			new_square.update_square()  # Update appearance
@@ -52,25 +64,47 @@ func connect_square_signals() -> void:
 
 func _on_square_mouse_entered(square: Square) -> void:
 	active_square = square
-	active_square.set_square_hover()
-	var mouse_pos = get_local_mouse_position()
-	highlight_available_squares(int(mouse_pos.y / 64), int(mouse_pos.x /64))
+	print(previous_squares)
+	print(active_square.get_square_model().get_grid_position())
+	if previous_squares.size() != 0:
+		var pos : Array = [square.get_square_model().get_grid_position().x, square.get_square_model().get_grid_position().y]
+		if  pos not in previous_squares:
+			active_square.set_square_hover()
+	else:
+		active_square.set_square_hover()
 	
 func _on_square_mouse_exited(square: Square) -> void:
-	square.update_square()  # Reset to original color
-	active_square = null
+	if previous_squares.size() != 0:
+		var pos : Array = [square.get_square_model().get_grid_position().x, square.get_square_model().get_grid_position().y]
+		if  pos not in previous_squares:
+			square.update_square()  # Reset to original color
+	else:
+		square.update_square()
+		active_square = null
 
 ## ======= Game Logic =======
 func handle_square_click() -> void:
-	active_square.set_move_number(active_square.model_resource.get_move_number() + 1)
+	var mouse_pos = get_local_mouse_position()
+	if previous_squares.size() != 0:
+		reset_squares(previous_squares)
+	previous_squares = highlight_available_squares(int(mouse_pos.y / TILE_SIZE), int(mouse_pos.x / TILE_SIZE))
+	active_square.set_move_number(board_model_resource.get_move_counter())
+	board_model_resource.update_move_counter()
 	active_square.update_move_label()
 	active_square.set_visited(true)
 	active_square.update_square()
+
+func reset_squares(squares: Array) -> void:	
+	for pos : Array in squares:
+		var squ : Square = square_grid[pos[0]][pos[1]]
+		squ.update_square()
+		
 	
-func highlight_available_squares(row, col):
+func highlight_available_squares(row, col) -> Array:
 	var available_moves = board_model_resource.get_available_moves(row, col)
 	for move in available_moves:
-		print("Mouse:" + str(row)+","+str(col))
-		print("Move: " + str(move[1]) + "," + str(move[0]))
-		square_grid[move[0]][move[1]].color = Color.YELLOW
+		var square : Square = square_grid[move[0]][move[1]]
+		if !square.get_square_model().get_visited():
+			square.color = Color.LIGHT_CORAL
+	return available_moves
 		

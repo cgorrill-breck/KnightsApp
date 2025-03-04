@@ -3,6 +3,8 @@ extends Resource
 
 @export var square_model_resource : SquareModel
 
+var move_counter = 1;
+
 const MOVES = {
 	1 : [2, -1], 
 	2 : [1, -2], 
@@ -39,7 +41,12 @@ func valid_square(row, col) -> bool:
 		return false
 	if col < 0 or col >= board_data[0].size():
 		return false
-	return true
+	return !board_data[row][col].get_visited()
 	#var square : SquareModel = board_data[row][col]
 	#return !square.visited
 	
+func get_move_counter():
+	return move_counter;
+	
+func update_move_counter():
+	move_counter += 1

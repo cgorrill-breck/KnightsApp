@@ -70,6 +70,12 @@ func set_square_hover():
 	color = COLORS["hover_square"]
 	
 ## ======= Setters & Getters =======
+func get_square_model() -> SquareModel:
+	return model_resource
+	
+func set_grid_position(pos : Vector2i):
+	model_resource.set_grid_position(pos)
+
 func set_move_number(value: int) -> void:
 	model_resource.set_move_number(value)
 	update_move_label()
@@ -83,6 +89,7 @@ func get_access_value() -> int:
 
 func set_visited(value: bool) -> void:
 	visited = value
+	model_resource.set_visited(value)
 
 func get_visited() -> bool:
 	return visited

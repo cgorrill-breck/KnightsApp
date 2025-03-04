@@ -3,6 +3,14 @@ extends Resource
 @export var move_number: int
 @export var access_value: int
 @export var visited: bool
+@export var position: Vector2i
+
+func set_grid_position(pos: Vector2i):
+	if pos:
+		position = pos
+	
+func get_grid_position() -> Vector2i:
+	return position
 
 func set_move_number(value: int) -> void:
 	move_number = value
