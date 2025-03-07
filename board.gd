@@ -13,24 +13,31 @@ func _ready() -> void:
 	connect_square_signals()
 	board_model_resource.fill_board(square_grid)
 
-## Handle user input
+## process for Heuristic Tour
 func _process(delta: float) -> void:
-	if not Input.is_action_just_pressed("left_mouse_button"):
-		return
-	if not active_square:
-		return
-	if board_model_resource.get_move_counter() > 1:
-		if square_in_previous(active_square):
-			handle_square_click()
-	else:
-		handle_square_click()
-	
+	if Input.is_action_just_pressed("left_mouse_button") and !board_model_resource.tour_complete:
+		var mouse_pos = get_local_mouse_position()
+		var mouse_vector : Vector2i = Vector2i(int(mouse_pos.y / TILE_SIZE), int(mouse_pos.x / TILE_SIZE)) 
+		handle_heuristic_tour(mouse_vector)
+		
+## Handle user input
+#func _process(delta: float) -> void:
+	#if not Input.is_action_just_pressed("left_mouse_button"):
+		#return
+	#if not active_square:
+		#return
+	#if board_model_resource.get_move_counter() > 1:
+		#if square_in_previous(active_square):
+			#handle_square_click()
+			#update_access_values()
+	#else:
+		#handle_square_click()
+		#update_access_values()
 			
 func square_in_previous(square: Square):
 	var pos = [0,0]
 	pos[1] = square.get_square_model().get_grid_position().y
 	pos[0] = square.get_square_model().get_grid_position().x
-	print("in previous: " + str(pos in previous_squares))
 	return pos in previous_squares;
 	
 ## ======= Grid Setup =======
@@ -64,8 +71,6 @@ func connect_square_signals() -> void:
 
 func _on_square_mouse_entered(square: Square) -> void:
 	active_square = square
-	print(previous_squares)
-	print(active_square.get_square_model().get_grid_position())
 	if previous_squares.size() != 0:
 		var pos : Array = [square.get_square_model().get_grid_position().x, square.get_square_model().get_grid_position().y]
 		if  pos not in previous_squares:
@@ -81,6 +86,7 @@ func _on_square_mouse_exited(square: Square) -> void:
 	else:
 		square.update_square()
 		active_square = null
+	
 
 ## ======= Game Logic =======
 func handle_square_click() -> void:
@@ -89,10 +95,26 @@ func handle_square_click() -> void:
 		reset_squares(previous_squares)
 	previous_squares = highlight_available_squares(int(mouse_pos.y / TILE_SIZE), int(mouse_pos.x / TILE_SIZE))
 	active_square.set_move_number(board_model_resource.get_move_counter())
+	board_model_resource.update_tour_path(active_square.global_position)# check on this.  Not sure if it will work
 	board_model_resource.update_move_counter()
 	active_square.update_move_label()
 	active_square.set_visited(true)
 	active_square.update_square()
+
+func handle_heuristic_tour(pos : Vector2i):
+	board_model_resource.run_heuristic_tour(pos)
+	update_all_squares()
+
+func update_all_squares():
+	for i in range(board_model_resource.board_data.size()):
+		for square : SquareModel in board_model_resource.board_data[i]:
+			square_grid[square.get_grid_position()[0]][square.get_grid_position()[1]].set_move_number(square.get_move_number())
+			square_grid[square.get_grid_position()[0]][square.get_grid_position()[1]].set_access_value(square.get_access_value())
+			square_grid[square.get_grid_position()[0]][square.get_grid_position()[1]].visited = true
+				
+func update_access_values():
+	for pos in previous_squares:
+		square_grid[pos[0]][pos[1]].set_access_value(square_grid[pos[0]][pos[1]].get_access_value() - 1)
 
 func reset_squares(squares: Array) -> void:	
 	for pos : Array in squares:

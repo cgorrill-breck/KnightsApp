@@ -1,0 +1,6 @@
+res://board.tscn
+res://square.tscn
+res://BoardModel.gd
+res://board.gd
+res://square.gd
+res://SquareModel.gd

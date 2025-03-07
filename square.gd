@@ -12,7 +12,6 @@ var visited: bool
 		set_square_color()
 		
 @export var model_resource : SquareModel
-
 ## Theme Colors
 const COLORS = {
 	"white": Color.FLORAL_WHITE, 
@@ -68,7 +67,7 @@ func set_square_hover():
 	move_number_label.add_theme_color_override("font_color", COLORS["hover_text"])
 	access_value_label.add_theme_color_override("font_color", COLORS["hover_text"])
 	color = COLORS["hover_square"]
-	
+
 ## ======= Setters & Getters =======
 func get_square_model() -> SquareModel:
 	return model_resource
@@ -82,6 +81,7 @@ func set_move_number(value: int) -> void:
 
 func set_access_value(value: int) -> void:
 	access_value = value
+	model_resource.set_access_value(value)
 	update_access_label()
 
 func get_access_value() -> int:

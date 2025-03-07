@@ -21,6 +21,9 @@ func get_move_number() -> int:
 func set_access_value(value: int) -> void:
 	access_value = value
 
+func update_access_value() -> void:
+	access_value -= 1
+
 func get_access_value() -> int:
 	return access_value
 
@@ -29,3 +32,6 @@ func set_visited(value: bool) -> void:
 
 func get_visited() -> bool:
 	return visited
+
+func toString() -> String:
+	return "Move number: " + str(move_number) + " Access: " + str(access_value) + " Visited: " + str(visited)
