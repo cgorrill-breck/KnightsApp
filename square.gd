@@ -27,6 +27,7 @@ const COLORS = {
 ## UI References
 @onready var move_number_label: Label = $labelHolder/MoveNumberLabel
 @onready var access_value_label: Label = $labelHolder/AccessValueLabel
+@onready var position_label: Label = $labelHolder/PositionLabel
 
 ## Signals
 signal mouse_in_square(square: Square)
@@ -55,6 +56,7 @@ func set_font_color() -> void:
 		text_color = COLORS["visited_text_dark"] if dark else COLORS["visited_text_light"]
 	move_number_label.add_theme_color_override("font_color", text_color)
 	access_value_label.add_theme_color_override("font_color", text_color)
+	position_label.add_theme_color_override("font_color", text_color)
 
 func set_square_selected() -> void:
 	if dark:
@@ -66,6 +68,7 @@ func set_square_selected() -> void:
 func set_square_hover():
 	move_number_label.add_theme_color_override("font_color", COLORS["hover_text"])
 	access_value_label.add_theme_color_override("font_color", COLORS["hover_text"])
+	position_label.add_theme_color_override("font_color", COLORS["hover_text"])
 	color = COLORS["hover_square"]
 
 ## ======= Setters & Getters =======
@@ -107,7 +110,10 @@ func update_move_label() -> void:
 
 func update_access_label() -> void:
 	access_value_label.text = str(model_resource.get_access_value())
-
+	
+func update_position_label():
+	position_label.text = str(model_resource.get_grid_position())
+	
 ## ======= Signal Handlers =======
 func _on_mouse_entered() -> void:
 	if not visited:
