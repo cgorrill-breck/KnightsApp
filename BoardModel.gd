@@ -17,16 +17,16 @@ const INITIAL_ACCESS_VALUES = [
 	[2, 3, 4, 4, 4, 4, 3, 2]
 ]
 
-const MOVES = {
-	1 : [2, -1], 
-	2 : [1, -2], 
-	3 : [-1, -2], 
-	4 : [-2, -1], 
-	5 : [-2, 1], 
-	6 : [-1, 2], 
-	7 : [1, 2], 
-	8 : [2, 1]
-	}
+const MOVES = [
+	Vector2i(2, -1),
+	Vector2i(1, -2),
+	Vector2i(-1, -2),
+	Vector2i(-2, -1),
+	Vector2i(-2, 1),
+	Vector2i(-1, 2),
+	Vector2i(1, 2),
+	Vector2i(2, 1),
+]
 
 var board_data: Array = []
 
@@ -46,70 +46,71 @@ func set_initial_access_values(board: Array):
 """
 return an array of valid board positions from the current knight position
 """
-func get_available_moves(row, col) -> Array:
+func get_available_moves(pos : Vector2i) -> Array:
 	var moves:= []
-	for move in range(1, 9):
-		var row_test = row + MOVES[move][1]
-		var col_test = col + MOVES[move][0]
-		if(valid_square(row_test, col_test)):
-			moves.append([row_test, col_test])
+	for move in range(0, 8):
+		var check_pos : Vector2i = pos + MOVES[move]
+		if(valid_square(check_pos)):
+			moves.append(check_pos)
 	return moves		
 	
 func run_heuristic_tour(pos : Vector2i) -> bool:
-	var knightPosition = [0,0] 
-	knightPosition[1] = pos.y
-	knightPosition[0] = pos.x
-	var first_square : SquareModel = board_data[knightPosition[0]][knightPosition[1]]
+	var knightPosition = pos
+	
+	var first_square : SquareModel = board_data[knightPosition.y][knightPosition.x]
 	first_square.set_move_number(move_counter)
 	first_square.set_visited(true)
-	update_access_for_available_moves(get_available_moves(knightPosition[0], knightPosition[1]))
+	update_access_for_available_moves(get_available_moves(knightPosition))
 	move_counter += 1
 	while(true):
-		var moves = get_available_moves(knightPosition[0], knightPosition[1])
+		var moves = get_available_moves(knightPosition)
 		if move_counter == 65:
 			break
 		if moves.size() < 1:
 			break
 		var move = pick_best_move(moves)
+		
 		knightPosition = move
-		board_data[move[0]][move[1]].set_move_number(move_counter)
-		board_data[move[0]][move[1]].set_visited(true)
+		board_data[move.y][move.x].set_move_number(move_counter)
+		board_data[move.y][move.x].set_visited(true)
 		update_access_for_available_moves(moves)
-		print("("+ board_data[move[0]][move[1]].toString())
+		print("("+ board_data[move.y][move.x].toString())
 		move_counter += 1
 	tour_complete = move_counter == 65
 	return move_counter == 65
 	
 
-func update_access_for_available_moves(moves : Array):
+func update_access_for_available_moves(moves: Array):
 	if moves.size() < 1:
 		return
 	for move in moves:
-		board_data[move[0]][move[1]].update_access_value()
+		board_data[move.y][move.x].update_access_value()
+		print("Updated access for:", move, "New Value:", board_data[move.y][move.x].get_access_value())
+
 
 """
 pick the best move from available moves
 each move in moves is a position on the board
 """	
-func pick_best_move(moves : Array):
+func pick_best_move(moves: Array):
 	var low_access = 10
-	var low_move = -1
+	var low_move = moves[0]  # Default to the first move to avoid returning -1
 	for move in moves:
-		print(str(move))
-		var access_val = board_data[move[0]][move[1]].get_access_value()
+		var access_val = board_data[move.y][move.x].get_access_value()
 		if access_val < low_access:
 			low_access = access_val
 			low_move = move
 	return low_move
+
 	
-func valid_square(row, col) -> bool:
+func valid_square(pos : Vector2i) -> bool:
 	if board_data.is_empty():
 		return false
-	if row < 0 or row >= board_data.size():
+	if pos.y < 0 or pos.y >= board_data.size():
 		return false
-	if col < 0 or col >= board_data[0].size():
+	if pos.x < 0 or pos.x >= board_data[0].size():
 		return false
-	return !board_data[row][col].get_visited()
+	return !board_data[pos.y][pos.x].get_visited()
 	#var square : SquareModel = board_data[row][col]
 	#return !square.visited
 	
