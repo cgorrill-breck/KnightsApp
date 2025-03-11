@@ -24,21 +24,21 @@ alignment = 1
 [node name="MoveNumberLabel" type="Label" parent="labelHolder"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 18
 text = "0"
 horizontal_alignment = 1
 
 [node name="AccessValueLabel" type="Label" parent="labelHolder"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 18
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PositionLabel" type="Label" parent="labelHolder"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 18
 text = "test"
 horizontal_alignment = 1
 

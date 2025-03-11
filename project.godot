@@ -11,17 +11,17 @@ config_version=5
 [application]
 
 config/name="KnightsTour"
-run/main_scene="res://board.tscn"
+run/main_scene="res://application.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=512
-window/size/viewport_height=512
+window/size/viewport_width=1024
+window/size/viewport_height=1024
 window/size/window_width_override=1024
 window/size/window_height_override=1024
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
 
 [input]
 

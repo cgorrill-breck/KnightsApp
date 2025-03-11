@@ -1,13 +1,16 @@
 extends Node2D
+class_name Board
 const NUM_ROWS = 8
 const NUM_COLS = 8
-const TILE_SIZE:= 64
+const TILE_SIZE:= 128
 ## Properties
 var square_grid: Array = []  # 2D array for grid
 var previous_squares: Array = []
 @export var square: PackedScene  # Assigned in the inspector
 @export var board_model_resource : BoardModel
 var active_square: Square
+var heuristic_state = false
+var user_input_state = false
 
 ## Called when the node enters the scene tree
 func _ready() -> void:
@@ -26,18 +29,25 @@ func _ready() -> void:
 		
 ## Handle user input
 func _process(delta: float) -> void:
-	if not Input.is_action_just_pressed("left_mouse_button"):
-		return
-	if not active_square:
-		return
-	if board_model_resource.get_move_counter() > 1:
-		if square_in_previous(active_square):
+	if user_input_state:
+		if not Input.is_action_just_pressed("left_mouse_button"):
+			return
+		if not active_square:
+			return
+		if board_model_resource.get_move_counter() > 1:
+			if square_in_previous(active_square):
+				handle_square_click()
+				update_access_values()
+		else:
 			handle_square_click()
 			update_access_values()
-	else:
-		handle_square_click()
-		update_access_values()
-			
+	if heuristic_state:
+		if Input.is_action_just_pressed("left_mouse_button") and !board_model_resource.tour_complete:
+			var mouse_vector : Vector2i = get_local_mouse_position()
+			var square_selected = Vector2i(int(mouse_vector.y / TILE_SIZE), int(mouse_vector.x / TILE_SIZE)) 
+			print("Clicked on: " + str(square_selected))
+			handle_heuristic_tour(square_selected)	
+				
 func square_in_previous(square: Square):
 	var pos : Vector2i = square.get_square_model().get_grid_position()
 	return pos in previous_squares;
@@ -51,6 +61,7 @@ func fill_grid(rows: int, cols: int) -> void:
 		var row: Array = []
 		for j in range(cols):
 			var new_square: Square = square.instantiate()
+			new_square.size = Vector2i(TILE_SIZE, TILE_SIZE)
 			new_square.set_grid_position(Vector2i(j,i))#+++++++++THIS MAY BE AN ISSUE++++++++++++++
 			add_child(new_square)  # Must be added before modifying position
 			new_square.position = Vector2(i * TILE_SIZE, j * TILE_SIZE)  # Set position

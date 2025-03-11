@@ -4,3 +4,5 @@ res://BoardModel.gd
 res://board.gd
 res://square.gd
 res://SquareModel.gd
+res://application.tscn
+res://sub_viewport.gd
