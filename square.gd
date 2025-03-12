@@ -23,11 +23,13 @@ const COLORS = {
 	"hover_square": Color.DARK_KHAKI,
 	"hover_text": Color.MIDNIGHT_BLUE
 }
+@onready var move_number_label = $MarginContainer/labelHolder/MoveNumberLabel
+@onready var position_label = $MarginContainer/labelHolder/PositionLabel
+@onready var access_value_label = $MarginContainer/labelHolder/AccessValueLabel
+
 
 ## UI References
-@onready var move_number_label: Label = $labelHolder/MoveNumberLabel
-@onready var access_value_label: Label = $labelHolder/AccessValueLabel
-@onready var position_label: Label = $labelHolder/PositionLabel
+
 
 ## Signals
 signal mouse_in_square(square: Square)
@@ -36,6 +38,7 @@ signal mouse_left_square(square: Square)
 ## Called when the node enters the scene tree
 func _ready() -> void:
 	update_square()
+	connect_square_signals()
 
 ## ======= UI & Appearance Updates =======
 func update_square() -> void:
@@ -122,3 +125,21 @@ func _on_mouse_entered() -> void:
 func _on_mouse_exited() -> void:
 	if not visited:
 		mouse_left_square.emit(self)
+		
+func connect_square_signals() -> void:
+	model_resource.access_value_updated.connect(_on_access_value_updated)
+	model_resource.move_number_updated.connect(_on_move_number_updated)
+	model_resource.visited_updated.connect(_on_visited_updated)
+	
+func _on_access_value_updated(square_model : SquareModel):
+	access_value = square_model.get_access_value()
+	print("access updated")
+
+func _on_move_number_updated(square_model : SquareModel):
+	move_number_label.text = str(square_model.get_move_number())
+	
+func _on_visited_updated(square_model : SquareModel):
+	visited = model_resource.get_visited()
+	print("visited updated ")
+	
+	

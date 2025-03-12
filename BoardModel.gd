@@ -74,7 +74,6 @@ func run_heuristic_tour(pos : Vector2i) -> bool:
 		board_data[move.y][move.x].set_move_number(move_counter)
 		board_data[move.y][move.x].set_visited(true)
 		update_access_for_available_moves(moves)
-		print("("+ board_data[move.y][move.x].toString())
 		move_counter += 1
 	tour_complete = move_counter == 65
 	return move_counter == 65
@@ -85,8 +84,7 @@ func update_access_for_available_moves(moves: Array):
 		return
 	for move in moves:
 		board_data[move.y][move.x].update_access_value()
-		print("Updated access for:", move, "New Value:", board_data[move.y][move.x].get_access_value())
-
+		
 
 """
 pick the best move from available moves
@@ -102,6 +100,11 @@ func pick_best_move(moves: Array):
 			low_move = move
 	return low_move
 
+func reset_board_data():
+	for row in range(board_data.size()):
+		for col in range(board_data[row].size()):
+			board_data[row][col].set_move_number(0)	
+			board_data[row][col].set_access_value(INITIAL_ACCESS_VALUES[row][col])
 	
 func valid_square(pos : Vector2i) -> bool:
 	if board_data.is_empty():
@@ -110,9 +113,7 @@ func valid_square(pos : Vector2i) -> bool:
 		return false
 	if pos.x < 0 or pos.x >= board_data[0].size():
 		return false
-	return !board_data[pos.y][pos.x].get_visited()
-	#var square : SquareModel = board_data[row][col]
-	#return !square.visited
+	return !board_data[pos.y][pos.x].get_visited()  
 	
 func get_move_counter():
 	return move_counter;
@@ -129,5 +130,7 @@ func print_board():
 		var row_cells:= ""
 		for square : SquareModel in row:
 			row_cells += str(square.get_move_number()) + ", "
+			row_cells += str(square.get_access_value()) + ", "
+			row_cells += str(square.get_visited()) + ", "
 		all_cells += row_cells + "\n"
 	print(all_cells)

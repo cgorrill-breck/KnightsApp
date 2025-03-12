@@ -17,15 +17,3 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-
-
-func _on_heuristic_pressed() -> void:
-	board.heuristic_state = true
-	board.user_input_state = false
-	user_input.disabled = true
-
-
-func _on_user_input_pressed() -> void:
-	board.heuristic_state = false
-	board.user_input_state = true
-	heuristic.disabled = true

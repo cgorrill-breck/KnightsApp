@@ -14,7 +14,6 @@ var user_input_state = false
 
 ## Called when the node enters the scene tree
 func _ready() -> void:
-	
 	fill_grid(NUM_ROWS, NUM_COLS)
 	connect_square_signals()
 	board_model_resource.fill_board(square_grid)
@@ -39,13 +38,14 @@ func _process(delta: float) -> void:
 				handle_square_click()
 				update_access_values()
 		else:
+			print("pressed user input")
 			handle_square_click()
 			update_access_values()
 	if heuristic_state:
 		if Input.is_action_just_pressed("left_mouse_button") and !board_model_resource.tour_complete:
 			var mouse_vector : Vector2i = get_local_mouse_position()
 			var square_selected = Vector2i(int(mouse_vector.y / TILE_SIZE), int(mouse_vector.x / TILE_SIZE)) 
-			print("Clicked on: " + str(square_selected))
+			print("tried to start tour")
 			handle_heuristic_tour(square_selected)	
 				
 func square_in_previous(square: Square):
@@ -109,7 +109,6 @@ func handle_square_click() -> void:
 	if previous_squares.size() != 0:
 		reset_squares(previous_squares)
 	mouse_pos = Vector2i(int(mouse_pos.y / TILE_SIZE), int(mouse_pos.x / TILE_SIZE))
-	print("Clicked on: " + str(mouse_pos))
 	previous_squares = highlight_available_squares(mouse_pos)
 	active_square.set_move_number(board_model_resource.get_move_counter())
 	board_model_resource.update_tour_path(active_square.global_position)# check on this.  Not sure if it will work
@@ -128,6 +127,12 @@ func update_all_squares():
 			square_grid[square.get_grid_position().y][square.get_grid_position().x].set_move_number(square.get_move_number())
 			square_grid[square.get_grid_position().y][square.get_grid_position().x].set_access_value(square.get_access_value())
 			square_grid[square.get_grid_position().y][square.get_grid_position().x].visited = true
+
+func update_all_square_colors():
+	for row in square_grid:
+		for square: Square in row:
+			square.set_visited(false)
+			square.update_square()
 				
 func update_access_values():
 	for pos in previous_squares:
