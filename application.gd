@@ -40,3 +40,6 @@ func _on_reset_pressed():
 	board.board_model_resource.print_board()
 	board.board_model_resource.move_counter = 1
 	board.board_model_resource.tour_complete = false
+	board.board_model_resource.tour_path.clear()
+	board.drawing.queue_redraw()
+	board.drawing.path_counter = 0

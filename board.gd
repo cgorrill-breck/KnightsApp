@@ -11,20 +11,13 @@ var previous_squares: Array = []
 var active_square: Square
 var heuristic_state = false
 var user_input_state = false
+@onready var drawing: Node2D = $Drawing
 
 ## Called when the node enters the scene tree
 func _ready() -> void:
 	fill_grid(NUM_ROWS, NUM_COLS)
 	connect_square_signals()
 	board_model_resource.fill_board(square_grid)
-
-## process for Heuristic Tour
-#func _process(delta: float) -> void:
-	#if Input.is_action_just_pressed("left_mouse_button") and !board_model_resource.tour_complete:
-		#var mouse_vector : Vector2i = get_local_mouse_position()
-		#var square_selected = Vector2i(int(mouse_vector.y / TILE_SIZE), int(mouse_vector.x / TILE_SIZE)) 
-		#print("Clicked on: " + str(square_selected))
-		#handle_heuristic_tour(square_selected)
 		
 ## Handle user input
 func _process(delta: float) -> void:
@@ -37,16 +30,17 @@ func _process(delta: float) -> void:
 			if square_in_previous(active_square):
 				handle_square_click()
 				update_access_values()
+				
 		else:
-			print("pressed user input")
 			handle_square_click()
 			update_access_values()
+			
 	if heuristic_state:
 		if Input.is_action_just_pressed("left_mouse_button") and !board_model_resource.tour_complete:
 			var mouse_vector : Vector2i = get_local_mouse_position()
 			var square_selected = Vector2i(int(mouse_vector.y / TILE_SIZE), int(mouse_vector.x / TILE_SIZE)) 
-			print("tried to start tour")
 			handle_heuristic_tour(square_selected)	
+		
 				
 func square_in_previous(square: Square):
 	var pos : Vector2i = square.get_square_model().get_grid_position()
@@ -116,10 +110,12 @@ func handle_square_click() -> void:
 	active_square.update_move_label()
 	active_square.set_visited(true)
 	active_square.update_square()
+	drawing.queue_redraw()
 
 func handle_heuristic_tour(pos : Vector2i):
-	board_model_resource.run_heuristic_tour(pos)
+	board_model_resource.run_heuristic_tour(pos, TILE_SIZE)
 	update_all_squares()
+	drawing.queue_redraw()
 
 func update_all_squares():
 	for i in range(board_model_resource.board_data.size()):

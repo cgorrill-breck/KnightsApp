@@ -1,9 +1,8 @@
 res://board.tscn
 res://square.tscn
 res://application.tscn
-res://square.gd
-res://application.gd
-res://sub_viewport.gd
-res://BoardModel.gd
 res://board.gd
-res://SquareModel.gd
+res://BoardModel.gd
+res://application.gd
+res://drawing.gd
+res://square.gd

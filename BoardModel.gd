@@ -54,10 +54,12 @@ func get_available_moves(pos : Vector2i) -> Array:
 			moves.append(check_pos)
 	return moves		
 	
-func run_heuristic_tour(pos : Vector2i) -> bool:
+func run_heuristic_tour(pos : Vector2i, tile_size) -> bool:
 	var knightPosition = pos
 	
 	var first_square : SquareModel = board_data[knightPosition.y][knightPosition.x]
+	print(str(pos) + ", " + str(first_square.get_grid_position()))
+	tour_path.append(Vector2i(knightPosition.y * tile_size, knightPosition.x * tile_size))
 	first_square.set_move_number(move_counter)
 	first_square.set_visited(true)
 	update_access_for_available_moves(get_available_moves(knightPosition))
@@ -73,9 +75,12 @@ func run_heuristic_tour(pos : Vector2i) -> bool:
 		knightPosition = move
 		board_data[move.y][move.x].set_move_number(move_counter)
 		board_data[move.y][move.x].set_visited(true)
+		tour_path.append(Vector2i(move.y * tile_size, move.x * tile_size))# added (col == x, row == y)
+		
 		update_access_for_available_moves(moves)
 		move_counter += 1
 	tour_complete = move_counter == 65
+	
 	return move_counter == 65
 	
 

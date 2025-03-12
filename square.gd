@@ -133,13 +133,11 @@ func connect_square_signals() -> void:
 	
 func _on_access_value_updated(square_model : SquareModel):
 	access_value = square_model.get_access_value()
-	print("access updated")
 
 func _on_move_number_updated(square_model : SquareModel):
 	move_number_label.text = str(square_model.get_move_number())
 	
 func _on_visited_updated(square_model : SquareModel):
 	visited = model_resource.get_visited()
-	print("visited updated ")
 	
 	
