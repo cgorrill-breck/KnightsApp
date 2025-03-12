@@ -15,12 +15,12 @@ var visited: bool
 ## Theme Colors
 const COLORS = {
 	"white": Color.FLORAL_WHITE, 
-	"black": Color.BLACK, 
+	"black": Color("212D40"),
 	"visited_square_light": Color.LIGHT_BLUE, 
 	"visited_square_dark": Color.DARK_SLATE_GRAY, 
 	"visited_text_light": Color.DARK_SLATE_BLUE, 
 	"visited_text_dark": Color.BISQUE,
-	"hover_square": Color.DARK_KHAKI,
+	"hover_square": Color("D66853"),
 	"hover_text": Color.MIDNIGHT_BLUE
 }
 @onready var move_number_label = $MarginContainer/labelHolder/MoveNumberLabel
