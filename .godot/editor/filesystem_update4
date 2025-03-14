@@ -1,8 +1,6 @@
 res://board.tscn
+res://application.gdshader
+res://board.gd
 res://square.tscn
 res://application.tscn
-res://board.gd
-res://BoardModel.gd
 res://application.gd
-res://drawing.gd
-res://square.gd

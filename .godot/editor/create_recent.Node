@@ -1,5 +1,6 @@
-Node2D
 Button
+CheckButton
+Node2D
 MarginContainer
 SubViewport
 SubViewportContainer

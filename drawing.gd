@@ -19,11 +19,11 @@ func draw_path():
 	for i in range(1, path.size()):
 		var next_pos = path[i] + Vector2i(board.TILE_SIZE / 2, board.TILE_SIZE / 2)
 		
-		draw_line(prev_pos, next_pos, Color.GREEN, 3.0)
+		draw_line(prev_pos, next_pos, Color.GOLD, 3.0)
 		prev_pos = next_pos
 	
 	# Draw start position marker
-	draw_circle(path[0] + Vector2i(board.TILE_SIZE / 2, board.TILE_SIZE / 2), 50, Color.RED, false, 3.0, true)
-	draw_circle(path[-1] + Vector2i(board.TILE_SIZE / 2, board.TILE_SIZE / 2), 50, Color.RED, false, 3.0, true)
+	draw_circle(path[0] + Vector2i(board.TILE_SIZE / 2, board.TILE_SIZE / 2), board.TILE_SIZE * .5 - 3, Color.RED, false, 3.0, true)
+	draw_circle(path[-1] + Vector2i(board.TILE_SIZE / 2, board.TILE_SIZE / 2), board.TILE_SIZE * .5 - 3, Color.RED, false, 3.0, true)
 
 	

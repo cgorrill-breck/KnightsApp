@@ -68,11 +68,12 @@ func set_square_selected() -> void:
 		color = COLORS["visited_square_light"]
 	set_font_color()
 
+#to be implimented hover effects
 func set_square_hover():
-	move_number_label.add_theme_color_override("font_color", COLORS["hover_text"])
-	access_value_label.add_theme_color_override("font_color", COLORS["hover_text"])
-	position_label.add_theme_color_override("font_color", COLORS["hover_text"])
-	color = COLORS["hover_square"]
+	pass
+	
+func exit_square_hover():
+	pass
 
 ## ======= Setters & Getters =======
 func get_square_model() -> SquareModel:

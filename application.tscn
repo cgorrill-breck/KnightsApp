@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://kyawuc8xcho5" path="res://board.tscn" id="1_lw8qs"]
 
 [node name="Application" type="Node2D"]
+self_modulate = Color(1, 0.306709, 0.720243, 1)
 position = Vector2(99, 0)
 script = ExtResource("1_40j84")
 
@@ -21,11 +22,12 @@ layout_mode = 2
 
 [node name="Control" type="Control" parent="GUIcontainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="GUIcontainer/HBoxContainer/Control"]
-layout_mode = 0
-offset_left = 127.0
-offset_right = 639.0
+layout_mode = 2
+offset_left = 207.0
+offset_right = 719.0
 offset_bottom = 512.0
 
 [node name="SubViewport" type="SubViewport" parent="GUIcontainer/HBoxContainer/Control/SubViewportContainer"]
@@ -48,6 +50,10 @@ layout_mode = 2
 layout_mode = 2
 text = "Heuristic"
 
+[node name="Heuristic64" type="Button" parent="GUIcontainer/HBoxContainer/Control2/VBoxContainer"]
+layout_mode = 2
+text = "Heuristic 64"
+
 [node name="UserInput" type="Button" parent="GUIcontainer/HBoxContainer/Control2/VBoxContainer"]
 layout_mode = 2
 text = "User Input
@@ -58,6 +64,15 @@ layout_mode = 2
 text = "Reset
 "
 
+[node name="BoardVisible" type="CheckButton" parent="GUIcontainer/HBoxContainer/Control2/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Visible Board
+"
+flat = true
+
 [connection signal="pressed" from="GUIcontainer/HBoxContainer/Control2/VBoxContainer/Heuristic" to="." method="_on_heuristic_pressed"]
+[connection signal="pressed" from="GUIcontainer/HBoxContainer/Control2/VBoxContainer/Heuristic64" to="." method="_on_heuristic_64_pressed"]
 [connection signal="pressed" from="GUIcontainer/HBoxContainer/Control2/VBoxContainer/UserInput" to="." method="_on_user_input_pressed"]
 [connection signal="pressed" from="GUIcontainer/HBoxContainer/Control2/VBoxContainer/Reset" to="." method="_on_reset_pressed"]
+[connection signal="toggled" from="GUIcontainer/HBoxContainer/Control2/VBoxContainer/BoardVisible" to="." method="_on_board_visible_toggled"]

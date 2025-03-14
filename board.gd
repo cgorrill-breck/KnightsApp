@@ -10,8 +10,10 @@ var previous_squares: Array = []
 @export var board_model_resource : BoardModel
 var active_square: Square
 var heuristic_state = false
+var heuristic_64_state = false
 var user_input_state = false
 @onready var drawing: Node2D = $Drawing
+var screenshot_count = 0
 
 ## Called when the node enters the scene tree
 func _ready() -> void:
@@ -29,8 +31,7 @@ func _process(delta: float) -> void:
 		if board_model_resource.get_move_counter() > 1:
 			if square_in_previous(active_square):
 				handle_square_click()
-				update_access_values()
-				
+				update_access_values()	
 		else:
 			handle_square_click()
 			update_access_values()
@@ -40,11 +41,33 @@ func _process(delta: float) -> void:
 			var mouse_vector : Vector2i = get_local_mouse_position()
 			var square_selected = Vector2i(int(mouse_vector.y / TILE_SIZE), int(mouse_vector.x / TILE_SIZE)) 
 			handle_heuristic_tour(square_selected)	
-		
+			heuristic_state = false
+			
+	if heuristic_64_state:
+		run_64_heuristic_tours()
+		heuristic_64_state = false
+				
+func run_64_heuristic_tours():
+	for i in range(8):
+		for j in range(8):
+			var square_selected = Vector2i(i, j) 
+			handle_heuristic_tour(square_selected)
+					
+
 				
 func square_in_previous(square: Square):
 	var pos : Vector2i = square.get_square_model().get_grid_position()
 	return pos in previous_squares;
+
+func capture_board_view_image():
+	await RenderingServer.frame_post_draw
+
+	var capture = get_viewport().get_texture().get_image()
+
+	var filename = "res://screenshots/Screenshot-{" + str(screenshot_count) + "}.png"
+	screenshot_count += 1
+	reset_board_after_run()
+	capture.save_png(filename)
 	
 ## ======= Grid Setup =======
 func fill_grid(rows: int, cols: int) -> void:
@@ -86,14 +109,17 @@ func _on_square_mouse_entered(square: Square) -> void:
 			active_square.set_square_hover()
 	else:
 		active_square.set_square_hover()
-	
+
+
 func _on_square_mouse_exited(square: Square) -> void:
 	if previous_squares.size() != 0:
 		var pos : Vector2i = square.get_square_model().get_grid_position()
 		if  pos not in previous_squares:
 			square.update_square()  # Reset to original color
+			square.exit_square_hover()
 	else:
 		square.update_square()
+		square.exit_square_hover()
 		active_square = null
 	
 
@@ -116,7 +142,8 @@ func handle_heuristic_tour(pos : Vector2i):
 	board_model_resource.run_heuristic_tour(pos, TILE_SIZE)
 	update_all_squares()
 	drawing.queue_redraw()
-
+	capture_board_view_image()
+	
 func update_all_squares():
 	for i in range(board_model_resource.board_data.size()):
 		for square : SquareModel in board_model_resource.board_data[i]:
@@ -129,6 +156,14 @@ func update_all_square_colors():
 		for square: Square in row:
 			square.set_visited(false)
 			square.update_square()
+
+func reset_board_after_run():
+	board_model_resource.move_counter = 1
+	board_model_resource.tour_complete = false
+	board_model_resource.tour_path.clear()
+	board_model_resource.reset_board_data()
+	drawing.queue_redraw()
+	drawing.path_counter = 0
 				
 func update_access_values():
 	for pos in previous_squares:
